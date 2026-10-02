@@ -4,9 +4,11 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { deliver } from "@/lib/deliver";
 import { isSpam, readFields, type FormState } from "@/lib/forms";
+import { resolveOrigin } from "@/lib/origin";
 import { getStripe } from "@/lib/stripe";
 import { retreat, webinar } from "@/content/events";
 import { checkoutPage } from "@/content/checkout";
+import { site } from "@/content/site";
 
 const SEND_FAILED =
   "We couldn't save that just now. Try again in a minute.";
@@ -71,12 +73,15 @@ export async function sendContactMessage(
   return { status: "sent" };
 }
 
-/** Where this request came from, so Stripe returns people to the same host (localhost, preview, production). */
+/** Where Stripe should send the buyer back to. Allowlisted: never echoes an unknown Host header (see lib/origin.ts). */
 async function requestOrigin() {
   const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
+  return resolveOrigin(h.get("x-forwarded-host") ?? h.get("host"), {
+    siteUrl: site.url,
+    // Order matters: [2] is the production alias, used as the fallback for unknown hosts.
+    vercelHosts: [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL],
+    isDev: process.env.NODE_ENV !== "production",
+  });
 }
 
 export async function startRetreatCheckout(
