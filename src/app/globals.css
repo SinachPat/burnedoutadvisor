@@ -1,0 +1,487 @@
+@import "tailwindcss";
+
+/* ───────────── Design tokens ─────────────
+   Gulf at dusk: deep ink water, a sea-glass shallows, and one ember that means
+   "this time is yours". Ember is the only warm colour on the page.            */
+@theme {
+  --color-ink: #0b1b2b;
+  --color-tide: #15384a;
+  --color-seaglass: #cfe3dd;
+  --color-foam: #f5f8f7;
+  --color-ember: #e8734a;
+  --color-ember-deep: #b94a24; /* ember as text on light backgrounds (4.8:1 on foam) */
+  --color-slate: #4f6170;
+
+  --radius-card: 0.875rem;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    background: var(--color-foam);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 92;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-ember);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--color-ember);
+    color: var(--color-ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ───────────── Signature: the week that exhales ─────────────
+   One 11s loop, shared by every cell so they stay in step (--T):
+     0%      cells are offset left to right by --d, so the sweep reaches each column in turn
+     6–48%   packed: client work + the things that drain it
+     48–64%  the audit line sweeps across; cells release as it passes
+     56–84%  drain cells are gone; "r" cells become ember "Yours" slots that pulse
+     90–100% the week refills with a small pop and the loop restarts (nothing ever blanks out)
+   Reduced motion gets the "after" state, held still (bottom of this block).  */
+.week {
+  --T: 11s;
+  --week-fill: color-mix(in oklab, var(--color-ink) 80%, var(--color-foam));
+  --week-gone: color-mix(in oklab, var(--color-ink) 22%, transparent);
+  --week-gone-bg: color-mix(in oklab, var(--color-ink) 4%, transparent);
+  --week-ember-1: color-mix(in oklab, var(--color-ember) 14%, transparent);
+  --week-ember-2: color-mix(in oklab, var(--color-ember) 26%, transparent);
+}
+
+.week-stage {
+  position: relative;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: 2.5rem repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.week-head,
+.week-time {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-slate);
+}
+.week-head {
+  padding-bottom: 0.25rem;
+  text-align: center;
+}
+.week-time {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.375rem;
+}
+
+.week-cell {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 2.75rem;
+  padding: 0.3rem 0.45rem;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-foam);
+  animation-duration: var(--T);
+  animation-delay: var(--d, 0s);
+  animation-iteration-count: infinite;
+  animation-fill-mode: both; /* hold the hidden 0% frame while a cell waits for its turn */
+  animation-timing-function: var(--ease-out-soft);
+}
+.week-cell > span {
+  display: none;
+}
+@media (min-width: 640px) {
+  .week-cell {
+    min-height: 3.25rem;
+  }
+  .week-cell > span {
+    display: block;
+  }
+}
+@media (min-width: 1024px) {
+  .week-cell {
+    min-height: 3.5rem;
+    padding: 0.4rem 0.55rem;
+    font-size: 0.6875rem;
+  }
+  .week-head,
+  .week-time {
+    font-size: 0.75rem;
+  }
+}
+
+.week-cell[data-kind="c"] {
+  background: var(--color-tide);
+  animation-name: week-keep;
+}
+/* A thin bar fills along client cells: time actually being spent on clients. */
+.week-cell[data-kind="c"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  background: color-mix(in oklab, var(--color-seaglass) 60%, transparent);
+  animation: week-bar var(--T) linear var(--d, 0s) infinite both;
+}
+
+.week-cell[data-kind="i"],
+.week-cell[data-kind="k"],
+.week-cell[data-kind="a"] {
+  background: var(--week-fill);
+  animation-name: week-drain;
+}
+.week-cell[data-kind="r"] {
+  background: var(--week-fill);
+  animation-name: week-reclaim;
+}
+
+/* "r" cells carry two labels that cross-fade as the sweep passes */
+.week-cell .before {
+  animation: week-label-out var(--T) var(--ease-out-soft) var(--d, 0s) infinite both;
+}
+.week-cell .after {
+  position: absolute;
+  inset: auto 0.6rem 0.4rem;
+  opacity: 0;
+  color: var(--color-ember-deep);
+  font-weight: 500;
+  animation: week-label-in var(--T) var(--ease-out-soft) var(--d, 0s) infinite both;
+}
+
+/* The sweep line. A gradient trail gives it motion without any glow. */
+.week-scan-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(2.5rem + 6px);
+  right: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.week-scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--color-ember);
+  opacity: 0;
+  animation: week-scan var(--T) linear infinite;
+}
+.week-scan::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  width: 3.5rem;
+  background: linear-gradient(to left, color-mix(in oklab, var(--color-ember) 24%, transparent), transparent);
+}
+
+.week-cap-before {
+  animation: week-cap-before var(--T) linear infinite;
+}
+.week-cap-after {
+  opacity: 0;
+  animation: week-cap-after var(--T) linear infinite;
+}
+
+@keyframes week-keep {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.025);
+  }
+  26% {
+    transform: scale(1);
+  }
+}
+
+@keyframes week-bar {
+  0%,
+  8% {
+    width: 0;
+  }
+  46%,
+  90% {
+    width: 100%;
+  }
+  96%,
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes week-drain {
+  0%,
+  48% {
+    transform: scale(1);
+    background: var(--week-fill);
+    color: var(--color-foam);
+    border-color: transparent;
+  }
+  56% {
+    transform: scale(0.97);
+    background: var(--week-gone-bg);
+    color: transparent;
+    border-color: var(--week-gone);
+  }
+  84%,
+  90% {
+    transform: scale(1);
+    background: var(--week-gone-bg);
+    color: transparent;
+    border-color: var(--week-gone);
+  }
+  97% {
+    transform: scale(1.04);
+    background: var(--week-fill);
+    color: var(--color-foam);
+    border-color: transparent;
+  }
+  100% {
+    transform: scale(1);
+    background: var(--week-fill);
+    color: var(--color-foam);
+    border-color: transparent;
+  }
+}
+
+@keyframes week-reclaim {
+  0%,
+  48% {
+    transform: scale(1);
+    background: var(--week-fill);
+    color: var(--color-foam);
+    border-color: transparent;
+  }
+  56% {
+    transform: scale(1.04);
+    background: var(--week-ember-1);
+    color: transparent;
+    border-color: var(--color-ember);
+  }
+  66% {
+    transform: scale(1);
+    background: var(--week-ember-2);
+    color: transparent;
+    border-color: var(--color-ember);
+  }
+  76% {
+    background: var(--week-ember-1);
+    color: transparent;
+    border-color: var(--color-ember);
+  }
+  84%,
+  90% {
+    transform: scale(1);
+    background: var(--week-ember-2);
+    color: transparent;
+    border-color: var(--color-ember);
+  }
+  97% {
+    transform: scale(1.04);
+    background: var(--week-fill);
+    color: var(--color-foam);
+    border-color: transparent;
+  }
+  100% {
+    transform: scale(1);
+    background: var(--week-fill);
+    color: var(--color-foam);
+    border-color: transparent;
+  }
+}
+
+@keyframes week-label-out {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  55%,
+  94% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes week-label-in {
+  0%,
+  56% {
+    opacity: 0;
+  }
+  62%,
+  84% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes week-scan {
+  0%,
+  48% {
+    left: 0;
+    opacity: 0;
+  }
+  49% {
+    left: 0;
+    opacity: 1;
+  }
+  64% {
+    left: 100%;
+    opacity: 1;
+  }
+  65%,
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes week-cap-before {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  56%,
+  94% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes week-cap-after {
+  0%,
+  56% {
+    opacity: 0;
+  }
+  62%,
+  86% {
+    opacity: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: no loop, no sweep. Show the finished "after" week, held still. */
+@media (prefers-reduced-motion: reduce) {
+  .week-cell,
+  .week-cell::after,
+  .week-cell .before,
+  .week-cell .after,
+  .week-scan,
+  .week-cap-before,
+  .week-cap-after {
+    animation: none !important;
+  }
+  .week-scan-track,
+  .week-cell[data-kind="c"]::after {
+    display: none;
+  }
+  .week-cell[data-kind="i"],
+  .week-cell[data-kind="k"],
+  .week-cell[data-kind="a"] {
+    background: var(--week-gone-bg);
+    color: transparent;
+    border-color: var(--week-gone);
+  }
+  .week-cell[data-kind="r"] {
+    background: var(--week-ember-1);
+    color: transparent;
+    border-color: var(--color-ember);
+  }
+  .week-cell .before {
+    opacity: 1;
+  }
+  .week-cell[data-kind="r"] .before {
+    opacity: 0;
+  }
+  .week-cell .after,
+  .week-cap-after {
+    opacity: 1;
+  }
+  .week-cap-before {
+    opacity: 0;
+  }
+}
+
+/* ───────────── Long-form text (legal pages) ───────────── */
+.prose-legal {
+  max-width: 44rem;
+}
+.prose-legal h2 {
+  margin-top: 2.5rem;
+  font-size: 1.5rem;
+}
+.prose-legal h3 {
+  margin-top: 1.75rem;
+  font-size: 1.125rem;
+}
+.prose-legal p,
+.prose-legal ul {
+  margin-top: 1rem;
+}
+.prose-legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.prose-legal a {
+  color: var(--color-ember-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
