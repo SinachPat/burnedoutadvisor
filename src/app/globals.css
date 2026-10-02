@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
 /* ───────────── Design tokens ─────────────
-   Gulf at dusk: deep ink water, a sea-glass shallows, and one ember that means
-   "this time is yours". Ember is the only warm colour on the page.            */
+   Gulf shallows: deep water (ink), teal (tide), aqua-mint (seaglass), sea-foam.
+   One warm note: sun, a soft butter yellow reserved for calls to action and for
+   "this time is yours". Lagoon is the accent for text on light backgrounds.    */
 @theme {
-  --color-ink: #0b1b2b;
-  --color-tide: #15384a;
-  --color-seaglass: #cfe3dd;
-  --color-foam: #f5f8f7;
-  --color-ember: #e8734a;
-  --color-ember-deep: #b94a24; /* ember as text on light backgrounds (4.8:1 on foam) */
-  --color-slate: #4f6170;
+  --color-ink: #062a33;
+  --color-tide: #0d4b57;
+  --color-seaglass: #c4eae4;
+  --color-foam: #f1f9f8;
+  --color-slate: #43606a;
+  --color-lagoon: #086d68; /* accent text/icons on light backgrounds (5.8:1 on foam, 4.8:1 on seaglass) */
+  --color-sun: #f5d96b; /* CTA + highlights; always paired with ink text */
+  --color-gold: #a98410; /* darker sun for outlines on white (3.5:1) */
+  --color-alert: #b3261e; /* form errors only */
 
   --radius-card: 0.875rem;
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -49,12 +52,16 @@
     text-wrap: pretty;
   }
   :focus-visible {
-    outline: 3px solid var(--color-ember);
+    outline: 3px solid var(--color-lagoon);
     outline-offset: 3px;
     border-radius: 4px;
   }
+  /* On deep-water sections the focus ring switches to sun so it stays visible. */
+  .bg-ink :focus-visible {
+    outline-color: var(--color-sun);
+  }
   ::selection {
-    background: var(--color-ember);
+    background: var(--color-sun);
     color: var(--color-ink);
   }
 }
@@ -70,7 +77,7 @@
      0%      cells are offset left to right by --d, so the sweep reaches each column in turn
      6–48%   packed: client work + the things that drain it
      48–64%  the audit line sweeps across; cells release as it passes
-     56–84%  drain cells are gone; "r" cells become ember "Yours" slots that pulse
+     56–84%  drain cells are gone; "r" cells become sun-yellow "Yours" slots that pulse
      90–100% the week refills with a small pop and the loop restarts (nothing ever blanks out)
    Reduced motion gets the "after" state, held still (bottom of this block).  */
 .week {
@@ -78,8 +85,8 @@
   --week-fill: color-mix(in oklab, var(--color-ink) 80%, var(--color-foam));
   --week-gone: color-mix(in oklab, var(--color-ink) 22%, transparent);
   --week-gone-bg: color-mix(in oklab, var(--color-ink) 4%, transparent);
-  --week-ember-1: color-mix(in oklab, var(--color-ember) 14%, transparent);
-  --week-ember-2: color-mix(in oklab, var(--color-ember) 26%, transparent);
+  --week-sun-1: color-mix(in oklab, var(--color-sun) 35%, transparent);
+  --week-sun-2: color-mix(in oklab, var(--color-sun) 70%, transparent);
 }
 
 .week-stage {
@@ -189,7 +196,7 @@
   position: absolute;
   inset: auto 0.6rem 0.4rem;
   opacity: 0;
-  color: var(--color-ember-deep);
+  color: var(--color-tide);
   font-weight: 500;
   animation: week-label-in var(--T) var(--ease-out-soft) var(--d, 0s) infinite both;
 }
@@ -210,7 +217,7 @@
   bottom: 0;
   left: 0;
   width: 2px;
-  background: var(--color-ember);
+  background: var(--color-lagoon);
   opacity: 0;
   animation: week-scan var(--T) linear infinite;
 }
@@ -221,7 +228,7 @@
   bottom: 0;
   right: 100%;
   width: 3.5rem;
-  background: linear-gradient(to left, color-mix(in oklab, var(--color-ember) 24%, transparent), transparent);
+  background: linear-gradient(to left, color-mix(in oklab, var(--color-lagoon) 22%, transparent), transparent);
 }
 
 .week-cap-before {
@@ -305,27 +312,27 @@
   }
   56% {
     transform: scale(1.04);
-    background: var(--week-ember-1);
+    background: var(--week-sun-1);
     color: transparent;
-    border-color: var(--color-ember);
+    border-color: var(--color-gold);
   }
   66% {
     transform: scale(1);
-    background: var(--week-ember-2);
+    background: var(--week-sun-2);
     color: transparent;
-    border-color: var(--color-ember);
+    border-color: var(--color-gold);
   }
   76% {
-    background: var(--week-ember-1);
+    background: var(--week-sun-1);
     color: transparent;
-    border-color: var(--color-ember);
+    border-color: var(--color-gold);
   }
   84%,
   90% {
     transform: scale(1);
-    background: var(--week-ember-2);
+    background: var(--week-sun-2);
     color: transparent;
-    border-color: var(--color-ember);
+    border-color: var(--color-gold);
   }
   97% {
     transform: scale(1.04);
@@ -441,9 +448,9 @@
     border-color: var(--week-gone);
   }
   .week-cell[data-kind="r"] {
-    background: var(--week-ember-1);
+    background: var(--week-sun-1);
     color: transparent;
-    border-color: var(--color-ember);
+    border-color: var(--color-gold);
   }
   .week-cell .before {
     opacity: 1;
@@ -481,7 +488,7 @@
   padding-left: 1.25rem;
 }
 .prose-legal a {
-  color: var(--color-ember-deep);
+  color: var(--color-tide);
   text-decoration: underline;
   text-underline-offset: 3px;
 }

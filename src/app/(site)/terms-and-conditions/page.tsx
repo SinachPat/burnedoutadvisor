@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { LegalPage, PortNotice } from "@/components/legal/legal-page";
+import { LegalBlocks, LegalPage } from "@/components/legal/legal-page";
+import { termsBlocks, termsUpdated } from "@/content/terms";
 
 export const metadata: Metadata = { title: "Terms and Conditions" };
 
-// The live page is published but empty, so there is nothing to port. These need to be written
-// (and should cover the $ retreat purchase: cancellations, refunds, transfers).
+// Copied from the old site's terms (see src/content/terms.ts). Needs a legal review before launch.
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms and Conditions">
-      <PortNotice source="burnedoutadvisor.com/terms-and-conditions, which is empty today" />
+    <LegalPage title="Terms and Conditions" updated={termsUpdated}>
+      <LegalBlocks blocks={termsBlocks} />
     </LegalPage>
   );
 }

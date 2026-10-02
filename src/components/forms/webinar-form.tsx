@@ -35,7 +35,7 @@ export function WebinarForm() {
       <TextArea name="message" label="Your message" defaultValue={v.message} error={e.message} optional />
 
       {state.status === "error" && state.message && (
-        <p role="alert" className="rounded-lg bg-ember/15 px-4 py-3 text-sm font-medium text-ember-deep">
+        <p role="alert" className="rounded-lg bg-alert/10 px-4 py-3 text-sm font-medium text-alert">
           {state.message}
         </p>
       )}

@@ -15,13 +15,13 @@ export function Wordmark({ light = false, className }: { light?: boolean; classN
           cy="14"
           r="10.5"
           fill="none"
-          stroke={light ? "#f5f8f7" : "#0b1b2b"}
+          stroke={light ? "#f1f9f8" : "#062a33"}
           strokeWidth="3"
           strokeDasharray="56 10"
           strokeLinecap="round"
           transform="rotate(-50 14 14)"
         />
-        <circle cx="14" cy="14" r="3" fill="#e8734a" />
+        <circle cx="14" cy="14" r="3" fill={light ? "#f5d96b" : "#086d68"} />
       </svg>
       <span className="font-display text-xl font-semibold tracking-tight">BurnedOut Media</span>
     </Link>

@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 
 const control =
-  "block w-full rounded-lg border border-ink/25 bg-white px-4 py-3 text-base text-ink placeholder:text-slate/60 transition-colors focus:border-ink aria-[invalid=true]:border-ember-deep";
+  "block w-full rounded-lg border border-ink/25 bg-white px-4 py-3 text-base text-ink placeholder:text-slate/60 transition-colors focus:border-ink aria-[invalid=true]:border-alert";
 
 type FieldProps = {
   name: string;
@@ -85,7 +85,7 @@ function FieldShell({
       </label>
       {children}
       {error && (
-        <p id={`${name}-error`} className="text-sm font-medium text-ember-deep">
+        <p id={`${name}-error`} className="text-sm font-medium text-alert">
           {error}
         </p>
       )}

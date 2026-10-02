@@ -20,7 +20,7 @@ export default function WebinarPage() {
         <Container className="grid gap-12 py-16 sm:py-24 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
           <div>
             <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-semibold">{hero.title}</h1>
-            <p className="mt-3 font-display text-3xl text-ember-deep sm:text-4xl">{hero.subtitle}</p>
+            <p className="mt-3 font-display text-3xl text-lagoon sm:text-4xl">{hero.subtitle}</p>
             <p className="mt-6 max-w-xl text-lg text-slate sm:text-xl">{hero.body}</p>
             <Eyebrow className="mt-8 inline-block rounded-full border border-ink/20 px-4 py-2 normal-case tracking-wide">
               {webinar.dateLabel}
@@ -30,7 +30,7 @@ export default function WebinarPage() {
             <ul className="mt-6 space-y-4">
               {discover.items.map((item) => (
                 <li key={item} className="flex gap-3.5">
-                  <CheckIcon className="mt-1 text-ember-deep" />
+                  <CheckIcon className="mt-1 text-lagoon" />
                   <span>{item}</span>
                 </li>
               ))}

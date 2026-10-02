@@ -38,7 +38,7 @@ export default function HomePage() {
           <h2 className="text-4xl sm:text-6xl">
             {reframe.lead}
             <br />
-            <span className="text-ember">{reframe.emphasis}</span>
+            <span className="text-sun">{reframe.emphasis}</span>
           </h2>
           <div className="space-y-5 text-lg text-seaglass/90">
             {reframe.paragraphs.map((p) => (
@@ -63,14 +63,14 @@ export default function HomePage() {
 
       {/* Agenda: a real sequence, so the numbers mean something. */}
       <Section id="agenda" tone="foam">
-        <Eyebrow className="text-ember-deep">{retreat.eyebrow}</Eyebrow>
+        <Eyebrow className="text-lagoon">{retreat.eyebrow}</Eyebrow>
         <h2 className="mt-4 text-4xl uppercase sm:text-5xl">{agenda.title}</h2>
         <p className="mt-3 text-xl text-slate">{agenda.subtitle}</p>
 
         <ol className="mt-12 divide-y divide-ink/15 border-y border-ink/15">
           {agenda.steps.map((step, i) => (
             <li key={step.title} className="grid gap-2 py-7 sm:grid-cols-[4rem_1fr_1.3fr] sm:items-baseline sm:gap-8">
-              <span className="font-mono text-sm font-medium text-ember-deep">{i + 1}</span>
+              <span className="font-mono text-sm font-medium text-lagoon">{i + 1}</span>
               <h3 className="text-2xl">{step.title}</h3>
               <p className="text-slate">{step.body}</p>
             </li>

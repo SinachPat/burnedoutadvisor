@@ -40,10 +40,10 @@ export function WeekGrid() {
       <figcaption className="mt-5 flex items-center justify-between gap-4 font-mono text-xs uppercase tracking-[0.1em] text-slate lg:text-[0.8125rem]">
         <span className="grid" aria-hidden="true">
           <span className="week-cap-before [grid-area:1/1]">An illustrative week: before the audit</span>
-          <span className="week-cap-after [grid-area:1/1] text-ember-deep">The same week: after the audit</span>
+          <span className="week-cap-after [grid-area:1/1] text-lagoon">The same week: after the audit</span>
         </span>
-        <span className="flex shrink-0 items-center gap-1.5 text-ember-deep" aria-hidden="true">
-          <i className="inline-block size-2.5 rounded-sm border border-ember bg-ember/20" />
+        <span className="flex shrink-0 items-center gap-1.5 text-lagoon" aria-hidden="true">
+          <i className="inline-block size-2.5 rounded-sm border border-gold bg-sun/50" />
           Yours
         </span>
       </figcaption>

@@ -7,10 +7,14 @@ export const retreat = {
   venue: "Tradewinds Island Grand",
   city: "St. Pete Beach, FL",
   eyebrow: "NOVEMBER 4–6, 2026 · TRADEWINDS ISLAND GRAND · ST. PETE BEACH, FL",
-  // The WordPress site checks out through FluentCart. Point this at the new checkout when it exists.
-  checkoutUrl:
-    process.env.NEXT_PUBLIC_RETREAT_CHECKOUT_URL ??
-    "https://burnedoutadvisor.com/?fluent-cart=instant_checkout&item_id=6&quantity=1",
+  checkoutHref: "/checkout",
+  // Charged by src/lib/actions.ts. The price is fixed here on the server, never read from the browser.
+  product: {
+    name: "BurnedOutAdvisor Florida Retreat Bundle",
+    description: "3-day retreat, November 4–6, 2026, Tradewinds Island Grand, St. Pete Beach, FL",
+    amount: 488800, // cents
+    currency: "usd",
+  },
 } as const;
 
 export const webinar = {

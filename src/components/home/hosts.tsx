@@ -23,7 +23,7 @@ export function Hosts({ id = "team" }: { id?: string }) {
               />
               <div>
                 <h3 className="text-2xl">{person.name}</h3>
-                <Eyebrow className="mt-2 text-ember-deep">{person.role}</Eyebrow>
+                <Eyebrow className="mt-2 text-lagoon">{person.role}</Eyebrow>
                 <p className="mt-4 text-slate">{person.bio}</p>
               </div>
             </article>

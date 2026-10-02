@@ -8,8 +8,8 @@ const base =
   "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
-  // Ink on ember: white on this orange is only 3:1.
-  primary: "bg-ember text-ink hover:bg-[#f08a65]",
+  // Sun yellow with ink text (about 12:1). A soft glow of colour, not an alarm.
+  primary: "bg-sun text-ink hover:bg-[#f8e18a]",
   outline: "border-2 border-ink text-ink hover:bg-ink hover:text-foam",
   "outline-light": "border-2 border-foam/70 text-foam hover:bg-foam hover:text-ink",
 };

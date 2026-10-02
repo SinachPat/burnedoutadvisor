@@ -16,7 +16,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <Eyebrow as="h2" className="text-ember">
+          <Eyebrow as="h2" className="text-sun">
             Explore
           </Eyebrow>
           <ul className="mt-4 space-y-2.5">
@@ -31,7 +31,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <Eyebrow as="h2" className="text-ember">
+          <Eyebrow as="h2" className="text-sun">
             Florida Retreat
           </Eyebrow>
           <p className="mt-4 text-seaglass/90">

@@ -1,28 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
-import { Field, Honeypot, TextArea } from "@/components/forms/field";
-import { sendContactMessage } from "@/lib/actions";
+import { Field, Honeypot } from "@/components/forms/field";
+import { startRetreatCheckout } from "@/lib/actions";
 import { initialFormState } from "@/lib/forms";
-import { contactPage } from "@/content/webinar";
+import { checkoutPage } from "@/content/checkout";
 
-export function ContactForm() {
-  const [state, action, pending] = useActionState(sendContactMessage, initialFormState);
+export function CheckoutForm() {
+  const [state, action, pending] = useActionState(startRetreatCheckout, initialFormState);
   const v = state.values ?? {};
   const e = state.errors ?? {};
 
-  if (state.status === "sent") {
-    return (
-      <div role="status" className="rounded-card bg-seaglass px-6 py-8">
-        <h3 className="text-2xl">{contactPage.sent.title}</h3>
-        <p className="mt-2 text-tide">{contactPage.sent.body}</p>
-      </div>
-    );
-  }
-
   return (
-    <form action={action} noValidate className="relative grid gap-5" aria-label="Contact">
+    <form action={action} noValidate className="relative grid gap-5" aria-label="Retreat checkout">
       <Honeypot />
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -30,7 +22,6 @@ export function ContactForm() {
         <Field name="lastName" label="Last name" autoComplete="family-name" defaultValue={v.lastName} error={e.lastName} required />
       </div>
       <Field name="email" type="email" label="Email address" autoComplete="email" defaultValue={v.email} error={e.email} required />
-      <TextArea name="message" label="Your message" defaultValue={v.message} error={e.message} required />
 
       {state.status === "error" && state.message && (
         <p role="alert" className="rounded-lg bg-alert/10 px-4 py-3 text-sm font-medium text-alert">
@@ -38,9 +29,17 @@ export function ContactForm() {
         </p>
       )}
 
-      <Button type="submit" disabled={pending} className="w-full sm:w-auto sm:justify-self-start">
-        {pending ? "Sending…" : contactPage.submit}
+      <Button type="submit" disabled={pending} className="w-full px-8 py-4 text-lg sm:w-auto sm:justify-self-start">
+        {pending ? "Opening secure payment…" : checkoutPage.submit}
       </Button>
+
+      <p className="text-sm text-slate">
+        {checkoutPage.terms.before}{" "}
+        <Link href="/terms-and-conditions" className="font-medium text-lagoon underline underline-offset-4">
+          {checkoutPage.terms.link}
+        </Link>
+        .
+      </p>
     </form>
   );
 }
